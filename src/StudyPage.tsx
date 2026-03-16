@@ -10,6 +10,7 @@ import {
   History, 
   Search, 
   ArrowLeft,
+  X,
   ChevronRight,
   Clock,
   CheckCircle2,
@@ -25,6 +26,18 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { ScriptureLink } from './scriptureData';
 
+interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
+interface Quiz {
+  title: string;
+  questions: QuizQuestion[];
+}
+
 interface Lesson {
   id: number;
   category: string;
@@ -32,6 +45,141 @@ interface Lesson {
   titleTl: string;
   icon: any;
   content: React.ReactNode;
+  quiz?: Quiz;
+}
+
+function QuizComponent({ quiz, lang }: { quiz: Quiz, lang: 'en' | 'tl' }) {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [score, setScore] = useState(0);
+  const [quizComplete, setQuizComplete] = useState(false);
+
+  const handleOptionSelect = (index: number) => {
+    if (showFeedback) return;
+    setSelectedOption(index);
+    setShowFeedback(true);
+    if (index === quiz.questions[currentQuestion].correctIndex) {
+      setScore(score + 1);
+    }
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestion < quiz.questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedOption(null);
+      setShowFeedback(false);
+    } else {
+      setQuizComplete(true);
+    }
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setSelectedOption(null);
+    setShowFeedback(false);
+    setScore(0);
+    setQuizComplete(false);
+  };
+
+  if (quizComplete) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-brand-blue/5 border-2 border-brand-blue/20 rounded-2xl p-8 text-center"
+      >
+        <div className="w-20 h-20 bg-brand-gold rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <CheckCircle2 className="text-brand-dark h-10 w-10" />
+        </div>
+        <h3 className="text-2xl font-bold text-brand-blue mb-2">Quiz Complete!</h3>
+        <p className="text-lg text-gray-600 mb-6">
+          You scored <span className="font-bold text-brand-blue">{score}</span> out of <span className="font-bold text-brand-blue">{quiz.questions.length}</span>
+        </p>
+        <button 
+          onClick={resetQuiz}
+          className="bg-brand-blue text-white px-8 py-3 rounded-full font-bold hover:bg-brand-dark transition-colors"
+        >
+          Retake Quiz
+        </button>
+      </motion.div>
+    );
+  }
+
+  const question = quiz.questions[currentQuestion];
+
+  return (
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold text-brand-blue">Lesson Quiz: {quiz.title}</h3>
+        <span className="text-sm font-bold text-gray-400">Question {currentQuestion + 1} of {quiz.questions.length}</span>
+      </div>
+
+      <div className="mb-8">
+        <p className="text-lg font-medium text-gray-800 mb-6">{question.question}</p>
+        <div className="space-y-3">
+          {question.options.map((option, index) => {
+            let bgColor = "bg-white hover:border-brand-blue/50";
+            let borderColor = "border-gray-200";
+            let icon = null;
+
+            if (showFeedback) {
+              if (index === question.correctIndex) {
+                bgColor = "bg-emerald-50";
+                borderColor = "border-emerald-500";
+                icon = <CheckCircle2 className="h-5 w-5 text-emerald-500" />;
+              } else if (index === selectedOption) {
+                bgColor = "bg-rose-50";
+                borderColor = "border-rose-500";
+                icon = <X className="h-5 w-5 text-rose-500" />;
+              }
+            } else if (selectedOption === index) {
+              borderColor = "border-brand-blue";
+              bgColor = "bg-brand-blue/5";
+            }
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleOptionSelect(index)}
+                disabled={showFeedback}
+                className={`w-full text-left p-4 rounded-xl border-2 transition-all flex justify-between items-center ${bgColor} ${borderColor}`}
+              >
+                <span className="font-medium">{option}</span>
+                {icon}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {showFeedback && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="mb-8 p-4 bg-white rounded-xl border border-gray-100 shadow-sm"
+          >
+            <p className="text-sm text-gray-600 leading-relaxed">
+              <span className="font-bold text-brand-blue">Explanation:</span> {question.explanation}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {showFeedback && (
+        <div className="flex justify-end">
+          <button 
+            onClick={nextQuestion}
+            className="bg-brand-blue text-white px-8 py-2 rounded-full font-bold hover:bg-brand-dark transition-colors flex items-center gap-2"
+          >
+            {currentQuestion < quiz.questions.length - 1 ? "Next Question" : "Finish Quiz"}
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function StudyPage({ 
@@ -97,7 +245,24 @@ export default function StudyPage({
             </div>
           </div>
         </div>
-      )
+      ),
+      quiz: {
+        title: "The Revelation of the Word",
+        questions: [
+          {
+            question: "Where did God's words originate?",
+            options: ["From the imagination of prophets", "From God Himself", "From ancient traditions", "From the Holy Ghost's own will"],
+            correctIndex: 1,
+            explanation: "God's words were not originated by man; He placed His words into the mouths of chosen prophets."
+          },
+          {
+            question: "According to 2 Peter 1:21, how did holy men of God speak?",
+            options: ["By their own wisdom", "By the will of man", "As they were moved by the Holy Ghost", "After years of study"],
+            correctIndex: 2,
+            explanation: "Prophecy came not by the will of man, but holy men spake as they were moved by the Holy Ghost."
+          }
+        ]
+      }
     },
     {
       id: 2,
@@ -1053,6 +1218,12 @@ export default function StudyPage({
                       <div className="prose prose-lg max-w-none text-gray-700 font-sans">
                         {currentLesson?.content}
                       </div>
+
+                      {currentLesson?.quiz && (
+                        <div className="mt-12">
+                          <QuizComponent quiz={currentLesson.quiz} lang={lang} />
+                        </div>
+                      )}
 
                       <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="flex items-center gap-2 text-gray-400 text-xs font-sans uppercase tracking-widest">
