@@ -21,7 +21,8 @@ import {
   Heart,
   Key,
   Cloud,
-  ArrowRight
+  ArrowRight,
+  Share2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import StudyPage from './StudyPage';
@@ -1131,22 +1132,47 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Back to Top */}
-      <AnimatePresence>
-        {scrolled && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-8 right-8 z-50 p-3 bg-brand-gold text-brand-dark rounded-full shadow-2xl hover:bg-yellow-400 transition-all hover:scale-110 active:scale-90 btn-glow"
-          >
-            <ArrowDown className="h-6 w-6 transform rotate-180" />
-          </motion.button>
-        )}
-      </AnimatePresence>
         </>
       )}
+
+      {/* Floating Buttons */}
+      <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+        <AnimatePresence>
+          {scrolled && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="p-3 bg-brand-gold text-brand-dark rounded-full shadow-2xl hover:bg-yellow-400 transition-all hover:scale-110 active:scale-90 btn-glow"
+              title="Back to Top"
+            >
+              <ArrowDown className="h-6 w-6 transform rotate-180" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => {
+            if (navigator.share) {
+              navigator.share({
+                title: 'The True Seed',
+                text: 'Explore the Divine Journey of the Church of Christ.',
+                url: window.location.href,
+              }).catch(console.error);
+            } else {
+              navigator.clipboard.writeText(window.location.href);
+              alert('Link copied to clipboard!');
+            }
+          }}
+          className="p-3 bg-brand-blue text-white rounded-full shadow-2xl hover:bg-brand-dark transition-all btn-glow"
+          title="Share Website"
+        >
+          <Share2 className="h-6 w-6" />
+        </motion.button>
+      </div>
     </div>
   );
 }
