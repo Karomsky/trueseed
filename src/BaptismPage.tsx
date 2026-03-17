@@ -20,7 +20,7 @@ export default function BaptismPage({ onBack, lang, onHover }: { onBack: (scroll
     {
       id: 1,
       title: lang === 'en' ? "Hear the Word" : "Pakinggan ang Salita",
-      desc: lang === 'en' ? "Complete 25 fundamental lessons taught by a Minister." : "Tapusin ang 25 pangunahing leksiyon na itinuturo ng Ministro.",
+      desc: lang === 'en' ? "Complete 30 fundamental lessons taught by a Minister." : "Tapusin ang 30 pangunahing leksiyon na itinuturo ng Ministro.",
       icon: BookOpen
     },
     {

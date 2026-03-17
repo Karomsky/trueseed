@@ -420,7 +420,11 @@ export default function App() {
               { 
                 icon: Globe, 
                 title: lang === 'en' ? "The Abrahamic Covenant" : "Ang Tipan kay Abraham", 
-                content: lang === 'en' ? "The promise was refined through Abraham. God established an \"everlasting covenant\" with him, declaring that through his lineage, the promised seed would emerge to bring salvation." : "Ang pangako ay pinatunayan kay Abraham. Nagtatag ang Diyos ng isang \"walang hanggang tipan\" sa kaniya, na nagpapahayag na sa pamamagitan ng kaniyang lahi, lilitaw ang ipinangakong binhi."
+                content: lang === 'en' ? (
+                  <>The promise was refined through Abraham. God established an "everlasting covenant" (<ScriptureLink verse="Genesis 17:7" onHover={handleHover}>Genesis 17:7</ScriptureLink>) with him, declaring that through his lineage, the promised seed would emerge to bring salvation.</>
+                ) : (
+                  <>Ang pangako ay pinatunayan kay Abraham. Nagtatag ang Diyos ng isang "walang hanggang tipan" (<ScriptureLink verse="Genesis 17:7" onHover={handleHover}>Genesis 17:7</ScriptureLink>) sa kaniya, na nagpapahayag na sa pamamagitan ng kaniyang lahi, lilitaw ang ipinangakong binhi.</>
+                )
               },
               { 
                 icon: User, 
@@ -513,7 +517,9 @@ export default function App() {
                     <Scale className="h-5 w-5" /> {t.solution_paradox}
                   </h4>
                   <p className="text-gray-300 leading-relaxed">
-                    {t.solution_paradox_desc}
+                    {lang === 'en' 
+                      ? <>The law states that each person must be put to death for their own sin (<ScriptureLink verse="Deuteronomy 24:16" onHover={handleHover}>Deut. 24:16</ScriptureLink>). No one can pay for another's debt. How then can Christ save mankind without violating God's justice?</>
+                      : <>Sinasabi ng batas na bawat tao ay dapat mamatay para sa sariling kasalanan (<ScriptureLink verse="Deuteronomy 24:16" onHover={handleHover}>Deut. 24:16</ScriptureLink>). Walang sinuman ang makapagbabayad para sa utang ng iba.</>}
                   </p>
                 </motion.div>
 
@@ -528,7 +534,9 @@ export default function App() {
                     <Users className="h-5 w-5 text-brand-gold" /> {t.solution_perfect}
                   </h4>
                   <p className="text-gray-300 leading-relaxed">
-                    {t.solution_perfect_desc}
+                    {lang === 'en'
+                      ? <>Christ created the 'One New Man' (<ScriptureLink verse="Ephesians 2:15" onHover={handleHover}>Eph. 2:15</ScriptureLink>) by joining Himself as the Head to the Church as His Body. Because they form one single legal entity, Christ could legally suffer for His body, the Church, satisfying the law for all its members.</>
+                      : <>Nilalang ni Cristo ang 'Isang Taong Bago' (<ScriptureLink verse="Ephesians 2:15" onHover={handleHover}>Efe. 2:15</ScriptureLink>) sa pamamagitan ng pag-uugnay sa Kaniyang sarili bilang Ulo sa Iglesia bilang Kaniyang Katawan.</>}
                   </p>
                 </motion.div>
               </div>
@@ -606,17 +614,29 @@ export default function App() {
                 { 
                   date: "A.D. 33", 
                   title: lang === 'en' ? "The First-Century Church" : "Ang Iglesia sa Unang Siglo", 
-                  content: lang === 'en' ? "Christ established His Church in Jerusalem, the spiritual fulfillment of the Seed. However, prophecy foretold that after the era of the Apostles, ravenous wolves would enter the flock." : "Itinatag ni Cristo ang Kaniyang Iglesia sa Jerusalem."
+                  content: lang === 'en' ? (
+                    <>Christ established His Church in Jerusalem (<ScriptureLink verse="Matthew 16:18" onHover={handleHover}>Matt. 16:18</ScriptureLink>), the spiritual fulfillment of the Seed. However, prophecy foretold that after the era of the Apostles, ravenous wolves would enter the flock (<ScriptureLink verse="Acts 20:29" onHover={handleHover}>Acts 20:29</ScriptureLink>).</>
+                  ) : (
+                    <>Itinatag ni Cristo ang Kaniyang Iglesia sa Jerusalem (<ScriptureLink verse="Mateo 16:18" onHover={handleHover}>Mat. 16:18</ScriptureLink>).</>
+                  )
                 },
                 { 
                   date: lang === 'en' ? "Post-Apostolic" : "Pagkatapos ng mga Apostol", 
                   title: lang === 'en' ? "The Great Apostasy" : "Ang Malawakang Pagtalikod", 
-                  content: lang === 'en' ? "Through severe persecution and false teachings, the first-century Church was led away from the true doctrines." : "Sa pamamagitan ng pag-uusig at maling aral, ang Iglesia sa unang siglo ay natalikod."
+                  content: lang === 'en' ? (
+                    <>Through severe persecution and false teachings, the first-century Church was led away from the true doctrines (<ScriptureLink verse="1 Timothy 4:1" onHover={handleHover}>1 Tim. 4:1</ScriptureLink>).</>
+                  ) : (
+                    <>Sa pamamagitan ng pag-uusig at maling aral, ang Iglesia sa unang siglo ay natalikod (<ScriptureLink verse="1 Timoteo 4:1" onHover={handleHover}>1 Tim. 4:1</ScriptureLink>).</>
+                  )
                 },
                 { 
                   date: "July 27, 1914", 
                   title: lang === 'en' ? "The Nalabing Binhi" : "Ang Nalabing Binhi", 
-                  content: lang === 'en' ? "The Church of Christ re-emerged in the Philippines concurrent with the First World War. This is the 'remnant seed' continuing the lineage of the Promise today." : "Ang Iglesia ni Cristo ay muling lumitaw sa Pilipinas kasabay ng Unang Digmaang Pandaigdig."
+                  content: lang === 'en' ? (
+                    <>The Church of Christ re-emerged in the Philippines concurrent with the First World War (<ScriptureLink verse="Matthew 24:6" onHover={handleHover}>Mat. 24:6-7</ScriptureLink>). This is the 'remnant seed' (<ScriptureLink verse="Isaiah 43:5" onHover={handleHover}>Isa. 43:5-6</ScriptureLink>) continuing the lineage of the Promise today.</>
+                  ) : (
+                    <>Ang Iglesia ni Cristo ay muling lumitaw sa Pilipinas kasabay ng Unang Digmaang Pandaigdig (<ScriptureLink verse="Mateo 24:6" onHover={handleHover}>Mat. 24:6-7</ScriptureLink>).</>
+                  )
                 }
               ].map((item, idx) => (
                 <div key={idx} className="flex items-start group relative z-10">
@@ -776,7 +796,7 @@ export default function App() {
               
               <div className="space-y-10 relative">
                 {[
-                  { title: "The Transformation", content: "Physical birth is insufficient for salvation. One must undergo a complete transformation, being \"Born Again\" of water and the Spirit." },
+                  { title: "The Transformation", content: lang === 'en' ? <>Physical birth is insufficient for salvation. One must undergo a complete transformation, being "Born Again" of water and the Spirit (<ScriptureLink verse="John 3:5" onHover={handleHover}>John 3:5</ScriptureLink>).</> : <>Ang pisikal na kapanganakan ay hindi sapat. Dapat sumailalim sa muling pagsilang (<ScriptureLink verse="Juan 3:5" onHover={handleHover}>Juan 3:5</ScriptureLink>).</> },
                   { title: "The Process", content: <>This renewal requires true Baptism into the Church of Christ (<ScriptureLink verse="Matthew 16:18" onHover={handleHover}>Matt. 16:18</ScriptureLink>), signifying the death of the old self and the emergence of a "new creation."</> },
                   { title: "The Result", content: <>By entering the true Church, the individual legally becomes "Abraham's seed and heirs according to the promise" (<ScriptureLink verse="Galatians 3:29" onHover={handleHover}>Galatians 3:29</ScriptureLink>).</> }
                 ].map((step, idx) => (
